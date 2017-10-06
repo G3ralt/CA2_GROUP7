@@ -5,11 +5,15 @@
  */
 package gui;
 
+import java.io.IOException;
+
 /**
  *
  * @author mre44
  */
 public class Chat extends javax.swing.JFrame {
+
+    private ChatClient client = null;
 
     /**
      * Creates new form Chat
@@ -42,6 +46,14 @@ public class Chat extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         connectButton.setText("Connect");
         connectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -56,6 +68,12 @@ public class Chat extends javax.swing.JFrame {
 
         jLabel3.setText("Username:");
 
+        IpAddress.setText("g3ralt.club");
+        IpAddress.setToolTipText("");
+
+        portNumber.setText("8081");
+        portNumber.setToolTipText("");
+
         messageInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 messageInputActionPerformed(evt);
@@ -63,6 +81,11 @@ public class Chat extends javax.swing.JFrame {
         });
 
         sendMessageBtn.setText("Send");
+        sendMessageBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessageBtnActionPerformed(evt);
+            }
+        });
 
         chatHistory.setEditable(false);
         chatHistory.setColumns(20);
@@ -147,12 +170,40 @@ public class Chat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-        
+        String IP = IpAddress.getText();
+        int port = Integer.parseInt(portNumber.getText());
+        String name = userName.getText();
+        try {
+            client = new ChatClient(IP, port, name);
+            Observer observer = new Observer(client.getSocket(), chatHistory);
+            new Thread(client).start();
+            new Thread(observer).start();
+        } catch (IOException ex) {
+
+        }
+
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void messageInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageInputActionPerformed
-        // TODO add your handling code here:
+        String message = messageInput.getText();
+        client.sendMessage(message);
+        messageInput.setText("");
     }//GEN-LAST:event_messageInputActionPerformed
+
+    private void sendMessageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageBtnActionPerformed
+        messageInputActionPerformed(evt);
+    }//GEN-LAST:event_sendMessageBtnActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        //
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (client != null) {
+            client.logOut();
+        }
+
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -181,7 +232,7 @@ public class Chat extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
+        Chat chat;
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
