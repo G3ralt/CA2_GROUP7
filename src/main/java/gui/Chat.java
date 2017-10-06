@@ -56,8 +56,15 @@ public class Chat extends javax.swing.JFrame {
 
         jLabel3.setText("Username:");
 
+        messageInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                messageInputActionPerformed(evt);
+            }
+        });
+
         sendMessageBtn.setText("Send");
 
+        chatHistory.setEditable(false);
         chatHistory.setColumns(20);
         chatHistory.setRows(5);
         jScrollPane1.setViewportView(chatHistory);
@@ -140,8 +147,12 @@ public class Chat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-     
+        
     }//GEN-LAST:event_connectButtonActionPerformed
+
+    private void messageInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_messageInputActionPerformed
 
     /**
      * @param args the command line arguments

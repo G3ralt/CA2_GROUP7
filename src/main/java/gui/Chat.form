@@ -139,6 +139,9 @@
     <Component class="javax.swing.JTextField" name="userName">
     </Component>
     <Component class="javax.swing.JTextField" name="messageInput">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="messageInputActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="sendMessageBtn">
       <Properties>
@@ -154,6 +157,7 @@
       <SubComponents>
         <Component class="javax.swing.JTextArea" name="chatHistory">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
           </Properties>
